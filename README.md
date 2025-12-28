@@ -68,6 +68,7 @@ Examples:
 | Turn ON    | `55AA01080501F1`     |
 | Brightness | `55AA010801FF??`     |
 | Color      | `55AA030802RRGGBB??` |
+
 Note: ?? represents the checksum byte, calculated as the least significant byte of the sum of all preceding bytes.
 
 ---
