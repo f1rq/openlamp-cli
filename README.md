@@ -19,6 +19,7 @@ Project was made by reverse-engineering the original mobile app and implementing
 - Linux
 - Bluetooth adapter
 - BlueZ
+- Go (>= 1.25)
 - Lamp compatible with the `55 AA` BLE protocol
 
 ---
