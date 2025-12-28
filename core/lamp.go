@@ -1,8 +1,13 @@
 package core
 
+import (
+	"strconv"
+)
+
 var CmdTurnOn = []byte{0x55, 0xAA, 0x01, 0x08, 0x05, 0x01, 0xF1}
 var CmdTurnOff = []byte{0x55, 0xAA, 0x01, 0x08, 0x05, 0x00, 0xF2}
-var CmdBrightness = []byte{0x55, 0xAA, 0x01, 0x08, 0x01} // This byte array does not contain brightness value and checksum
+var CmdBrightness = []byte{0x55, 0xAA, 0x01, 0x08, 0x01} // does not contain value and checksum
+var CmdColor = []byte{0x55, 0xAA, 0x03, 0x08, 0x02}      // does not contain value and checksum
 
 func TurnOn() error {
 	return WriteToLamp(CmdTurnOn)
@@ -17,10 +22,20 @@ func SetBrightness(value byte) error {
 		value = 255
 	}
 
-	cmd := make([]byte, len(CmdBrightness))
-	copy(cmd, CmdBrightness)
-
+	cmd := append([]byte{}, CmdBrightness...)
 	cmd = append(cmd, value)
+	cmd = append(cmd, ComputeChecksum(cmd))
+
+	return WriteToLamp(cmd)
+}
+
+func SetColor(value string) error {
+	r, _ := strconv.ParseUint(value[0:2], 16, 8) // input validated in main.go
+	g, _ := strconv.ParseUint(value[2:4], 16, 8) // input validated in main.go
+	b, _ := strconv.ParseUint(value[4:6], 16, 8) // input validated in main.go
+
+	cmd := append([]byte{}, CmdColor...)
+	cmd = append(cmd, byte(r), byte(g), byte(b))
 	cmd = append(cmd, ComputeChecksum(cmd))
 
 	return WriteToLamp(cmd)
