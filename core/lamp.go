@@ -1,0 +1,12 @@
+package core
+
+var CmdTurnOn = []byte{0x55, 0xAA, 0x01, 0x08, 0x05, 0x01, 0xF1}
+var CmdTurnOff = []byte{0x55, 0xAA, 0x01, 0x08, 0x05, 0x00, 0xF2}
+
+func TurnOn() error {
+	return WriteToLamp(CmdTurnOn)
+}
+
+func TurnOff() error {
+	return WriteToLamp(CmdTurnOff)
+}
