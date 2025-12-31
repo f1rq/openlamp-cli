@@ -31,7 +31,13 @@ func main() {
 		return
 	}
 	if command == "temp" && len(os.Args) != 3 {
-		fmt.Println("correct usage: openlamp temp <white|natural|sunlight|sunset|candle>")
+		fmt.Println("correct usage: openlamp temp <temperature>")
+		printAvailable("Available temperatures: ", core.Temperatures)
+		return
+	}
+	if command == "scene" && len(os.Args) != 3 {
+		fmt.Println("correct usage: openlamp scene <scene>")
+		printAvailable("Available scenes: ", core.Scenes)
 		return
 	}
 
@@ -69,20 +75,30 @@ func main() {
 
 		err = core.SetColor(hexColor)
 	case "temp":
-		temperature := os.Args[2]
-		_, tempAvail := core.Temperatures[temperature]
-		if !tempAvail {
-			fmt.Println("Available temperatures: white, natural, sunlight, sunset, candle")
-			return
+		err = core.SetTemperature(os.Args[2])
+		if err != nil {
+			fmt.Println("Temperature not found: ", os.Args[2])
+			printAvailable("Available temperatures: ", core.Temperatures)
 		}
-		err = core.SetTemperature(temperature)
+	case "scene":
+		err = core.SetScene(os.Args[2])
+		if err != nil {
+			fmt.Println("Scene not found: ", os.Args[2])
+			printAvailable("Available scenes: ", core.Scenes)
+		}
 	default:
 		fmt.Println("unknown command:", os.Args[1])
 		os.Exit(1)
 	}
 
 	if err != nil {
-		fmt.Println("error:", err)
 		os.Exit(1)
+	}
+}
+
+func printAvailable(title string, items map[string][]byte) {
+	fmt.Println(title)
+	for name := range items {
+		fmt.Println(" -", name)
 	}
 }
