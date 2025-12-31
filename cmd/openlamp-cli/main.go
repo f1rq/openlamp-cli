@@ -23,11 +23,15 @@ func main() {
 		}
 	}
 	if command == "brightness" && len(os.Args) != 3 {
-		fmt.Println("Please specify brightness value (0-255)")
+		fmt.Println("correct usage: openlamp brightness <value> | (0-255)")
 		return
 	}
 	if command == "color" && len(os.Args) != 3 {
-		fmt.Println("Please specify hex color (without #)")
+		fmt.Println("correct usage: openlamp color <hex>")
+		return
+	}
+	if command == "temp" && len(os.Args) != 3 {
+		fmt.Println("correct usage: openlamp temp <white|natural|sunlight|sunset|candle>")
 		return
 	}
 
@@ -64,6 +68,14 @@ func main() {
 		}
 
 		err = core.SetColor(hexColor)
+	case "temp":
+		temperature := os.Args[2]
+		_, tempAvail := core.Temperatures[temperature]
+		if !tempAvail {
+			fmt.Println("Available temperatures: white, natural, sunlight, sunset, candle")
+			return
+		}
+		err = core.SetTemperature(temperature)
 	default:
 		fmt.Println("unknown command:", os.Args[1])
 		os.Exit(1)
