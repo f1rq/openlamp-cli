@@ -9,13 +9,17 @@ import (
 
 func main() {
 	if len(os.Args) < 2 {
-		fmt.Println("usage: openlamp-cli <command> [value]")
+		printHelp()
 		return
 	}
 
 	var err error
 
 	command := os.Args[1]
+	if command == "help" {
+		printHelp()
+		return
+	}
 	if command == "turnon" || command == "turnoff" {
 		if len(os.Args) != 2 {
 			fmt.Println("Incorrect number of arguments")
@@ -101,4 +105,18 @@ func printAvailable(title string, items map[string][]byte) {
 	for name := range items {
 		fmt.Println(" -", name)
 	}
+}
+
+func printHelp() {
+	fmt.Println("Openlamp CLI")
+	fmt.Println("Usage: openlamp <command> [value]")
+	fmt.Println()
+	fmt.Println("Commands:")
+	fmt.Printf("%-30s %s\n", " turnon", "Turn the lamp on")
+	fmt.Printf("%-30s %s\n", " turnoff", "Turn the lamp off")
+	fmt.Printf("%-30s %s\n", " brightness <0-255>", "Set brightness level")
+	fmt.Printf("%-30s %s\n", " color <RRGGBB>", "Set color in hex (without #)")
+	fmt.Printf("%-30s %s\n", " temp <temperature>", "Set light temperature (list at: openlamp temp)")
+	fmt.Printf("%-30s %s\n", " scene <scene>", "Set scene (list at: openlamp scene)")
+	fmt.Printf("%-30s %s\n", " help", "Show this menu")
 }
